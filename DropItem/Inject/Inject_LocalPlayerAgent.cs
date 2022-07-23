@@ -10,7 +10,7 @@ namespace DropItem.Inject
         private static void Postfix(LocalPlayerAgent __instance)
         {
             var obj = __instance.gameObject;
-            if (obj.GetComponent<DropItemUpdater> == null)
+            if (obj.GetComponent<DropItemUpdater>() == null)
             {
                 var handler = obj.AddComponent<DropItemUpdater>();
                 obj.AddComponent<DropItemGhostHandler>();
