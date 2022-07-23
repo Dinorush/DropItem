@@ -84,6 +84,9 @@ namespace DropItem.Handlers
 
         public static void DropWieldingItemToSlot()
         {
+            if (!WieldingItem.AllowPlayerInteraction)
+                return;
+
             if (TryGetItemInLevel(out var itemInLevel))
             {
                 var sync = itemInLevel.GetSyncComponent();
@@ -92,7 +95,15 @@ namespace DropItem.Handlers
 
                 var baseTransform = Slot.GetTransform(WieldingSlot);
                 var customData = sync.GetCustomData();
+                var backpack = PlayerBackpackManager.LocalBackpack;
+                if (backpack == null)
+                    return;
 
+                var localAmmo = PlayerBackpackManager.LocalBackpack.AmmoStorage;
+                if (localAmmo == null)
+                    return;
+
+                customData.ammo = localAmmo.GetInventorySlotAmmo(WieldingSlot).AmmoInPack;
                 sync.AttemptPickupInteraction(
                     type: ePickupItemInteractionType.Place,
                     player: SNet.LocalPlayer,
@@ -121,7 +132,8 @@ namespace DropItem.Handlers
             var flag1 = (WieldingSlot == InventorySlot.Consumable || WieldingSlot == InventorySlot.ResourcePack);
             var flag2 = !Slot.GetIsSlotInUse();
             var flag3 = Slot.IsContainerOpened();
-            return flag1 && flag2 && flag3;
+            var flag4 = WieldingItem.AllowPlayerInteraction;
+            return flag1 && flag2 && flag3 && flag4;
         }
 
         public static void Clear()
