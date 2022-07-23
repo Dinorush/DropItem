@@ -14,7 +14,7 @@ namespace DropItem.Comps
 {
     internal sealed class ResourceContainerSlot : MonoBehaviour
     {
-        public static readonly Dictionary<int, HashSet<int>> _ItemsLookup = new();
+        private static readonly Dictionary<int, HashSet<int>> _ItemsLookup = new();
 
         public Il2CppReferenceField<BoxCollider> Collider;
         public Il2CppReferenceField<LG_WeakResourceContainer_Graphics> Graphic;
