@@ -1,16 +1,7 @@
 ﻿using BepInEx.IL2CPP.Utils;
-using DropItem.Comps;
 using Il2CppInterop.Runtime.Attributes;
-using LevelGeneration;
 using Localization;
-using Player;
-using SNetwork;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace DropItem.Handlers
@@ -114,7 +105,7 @@ namespace DropItem.Handlers
 
             var timer = 0.0f;
             var timerInterrupted = false;
-            while(timer <= interactionTime)
+            while (timer <= interactionTime)
             {
                 if (!DropItemManager.InteractionAllowed)
                 {

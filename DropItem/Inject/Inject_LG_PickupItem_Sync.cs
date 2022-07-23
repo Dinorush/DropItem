@@ -1,15 +1,7 @@
 ﻿using DropItem.Comps;
-using DropItem.Handlers;
-using GTFO.API.Utilities;
 using HarmonyLib;
 using LevelGeneration;
-using Player;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace DropItem.Inject
@@ -83,7 +75,7 @@ namespace DropItem.Inject
                 var currentPosition = item.transform.position;
                 if (lastPosition != currentPosition)
                 {
-                    
+
                 }
                 yield return null;
             }

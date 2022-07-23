@@ -2,12 +2,8 @@
 using BepInEx.IL2CPP;
 using DropItem.Comps;
 using DropItem.Handlers;
-using GTFO.API;
 using HarmonyLib;
 using Il2CppInterop.Runtime.Injection;
-using LevelGeneration;
-using System.Linq;
-using UnityEngine;
 
 namespace DropItem
 {
