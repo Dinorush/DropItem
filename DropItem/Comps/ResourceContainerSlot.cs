@@ -1,4 +1,5 @@
 ﻿using DropItem.Handlers;
+using GameData;
 using Il2CppInterop.Runtime.Attributes;
 using Il2CppInterop.Runtime.InteropTypes.Fields;
 using LevelGeneration;
@@ -123,7 +124,7 @@ namespace DropItem.Comps
         }
 
         [HideFromIl2Cpp]
-        public static bool IsValidItemForSlot(Item item)
+        public static bool IsValidItemForDrop(Item item)
         {
             if (item == null)
                 return false;
@@ -134,6 +135,25 @@ namespace DropItem.Comps
             return item.ItemDataBlock.inventorySlot switch
             {
                 InventorySlot.ResourcePack or InventorySlot.Consumable => true,
+                _ => false,
+            };
+        }
+
+        [HideFromIl2Cpp]
+        public static bool IsValidItemForSlot(Item item)
+        {
+            if (item == null)
+                return false;
+
+            if (item.ItemDataBlock == null)
+                return false;
+
+            if (item.ItemDataBlock.persistentID == GD.Item.ARTIFACT_Base_ItemData)
+                return true;
+
+            return item.ItemDataBlock.inventorySlot switch
+            {
+                InventorySlot.ResourcePack or InventorySlot.Consumable or InventorySlot.InPocket => true,
                 _ => false,
             };
         }

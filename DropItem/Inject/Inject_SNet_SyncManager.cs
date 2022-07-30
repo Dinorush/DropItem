@@ -12,14 +12,14 @@ namespace DropItem.Inject
     {
         private static void Postfix()
         {
-            var slots = GameObject.FindObjectsOfTypeAll(Il2CppType.Of<ResourceContainerSlot>());
+            var slots = Object.FindObjectsOfTypeAll(Il2CppType.Of<ResourceContainerSlot>());
             foreach (var slot in slots)
             {
                 var s = slot.Cast<ResourceContainerSlot>();
                 s.RemoveAllItem();
             }
 
-            var syncs = GameObject.FindObjectsOfTypeAll(Il2CppType.Of<LG_PickupItem_Sync>());
+            var syncs = Object.FindObjectsOfTypeAll(Il2CppType.Of<LG_PickupItem_Sync>());
             foreach (var comp in syncs)
             {
                 var sync = comp.TryCast<LG_PickupItem_Sync>();
