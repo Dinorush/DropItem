@@ -11,6 +11,9 @@ namespace DropItem.Handlers
         private bool _DropAllowed = false;
         private bool _HoldingKey = false;
 
+        private static string _DropPromptMessage = string.Empty;
+        private static string _DropPromptButton = string.Empty;
+
         Coroutine _InteractionRoutine;
 
         void Awake()
@@ -30,6 +33,7 @@ namespace DropItem.Handlers
 
             if (_DropAllowed)
             {
+                UpdateDropMessage();
                 SetDropMessage();
             }
             else
@@ -60,12 +64,16 @@ namespace DropItem.Handlers
         }
 
         [HideFromIl2Cpp]
+        static void UpdateDropMessage()
+        {
+            _DropPromptMessage = string.Format(Text.Get(864), DropItemManager.WieldingItem.PublicName); //InGame.InteractionPrompt.Drop_X
+            _DropPromptButton = string.Format(Text.Get(827), InputMapper.GetBindingName(InputAction.Use)); //InGame.InteractionPrompt.Hold_X
+        }
+
         static void SetDropMessage()
         {
             GuiManager.InteractionLayer.InteractPromptVisible = true;
-            var message = string.Format(Text.Get(864), DropItemManager.WieldingItem.PublicName); //InGame.InteractionPrompt.Drop_X
-            var button = string.Format(Text.Get(827), InputMapper.GetBindingName(InputAction.Use)); //InGame.InteractionPrompt.Hold_X
-            GuiManager.InteractionLayer.SetInteractPrompt(message, button);
+            GuiManager.InteractionLayer.SetInteractPrompt(_DropPromptMessage, _DropPromptButton);
         }
 
         [HideFromIl2Cpp]
@@ -112,6 +120,7 @@ namespace DropItem.Handlers
                     timerInterrupted = true;
                     break;
                 }
+                SetDropMessage();
                 GuiManager.InteractionLayer.SetTimer(timer / interactionTime);
                 timer += Time.deltaTime;
                 yield return null;
