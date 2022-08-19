@@ -1,5 +1,5 @@
 ﻿using BepInEx;
-using BepInEx.IL2CPP;
+using BepInEx.Unity.IL2CPP;
 using DropItem.Comps;
 using DropItem.Handlers;
 using HarmonyLib;
