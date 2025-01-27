@@ -21,7 +21,7 @@ namespace DropItem.Inject
             {
                 if (ResourceContainerSlot.TryFindSlotInPosition(state.placement.position, out var slot))
                 {
-                    slot.AddItem(__instance.gameObject.GetInstanceID());
+                    slot.AddItem(__instance);
                 }
             }
         }
@@ -43,14 +43,14 @@ namespace DropItem.Inject
             {
                 if (ResourceContainerSlot.TryFindSlotInPosition(newState.placement.position, out var slot))
                 {
-                    slot.AddItem(__instance.gameObject.GetInstanceID());
+                    slot.AddItem(__instance);
                 }
             }
             else if (newState.status == ePickupItemStatus.PickedUp)
             {
                 if (ResourceContainerSlot.TryFindSlotInPosition(__instance.transform.position, out var slot))
                 {
-                    slot.RemoveItem(__instance.gameObject.GetInstanceID());
+                    slot.RemoveItem(__instance);
                 }
             }
         }

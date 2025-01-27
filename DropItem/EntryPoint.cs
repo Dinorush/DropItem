@@ -22,6 +22,7 @@ namespace DropItem
 
             _Harmony = new Harmony($"{VersionInfo.RootNamespace}.Harmony");
             _Harmony.PatchAll();
+            GTFO.API.LevelAPI.OnLevelCleanup += ResourceContainerSlot.OnLevelCleanup;
         }
     }
 }

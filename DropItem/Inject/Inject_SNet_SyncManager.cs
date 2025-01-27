@@ -35,7 +35,7 @@ namespace DropItem.Inject
                 {
                     if (ResourceContainerSlot.TryFindSlotInPosition(state.placement.position, out var slot))
                     {
-                        slot.AddItem(item.gameObject.GetInstanceID());
+                        slot.AddItem(sync);
                     }
                 }
             }

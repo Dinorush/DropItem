@@ -4,6 +4,7 @@ using Il2CppInterop.Runtime.Attributes;
 using Il2CppInterop.Runtime.InteropTypes.Fields;
 using LevelGeneration;
 using Player;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,14 +12,14 @@ namespace DropItem.Comps
 {
     internal sealed class ResourceContainerSlot : MonoBehaviour
     {
-        private static readonly Dictionary<int, HashSet<int>> _ItemsLookup = new();
+        private static readonly Dictionary<IntPtr, ResourceContainerSlot> _CreatedSlots = new();
 
         public Il2CppReferenceField<BoxCollider> Collider;
         public Il2CppReferenceField<LG_WeakResourceContainer_Graphics> Graphic;
         public Il2CppReferenceField<LG_ResourceContainer_Storage> Storage;
         public Il2CppReferenceField<StorageSlot> Slot;
-        public Il2CppReferenceField<LG_PickupItem_Sync> SlotItem;
         public Il2CppValueField<int> SlotIndex;
+        public readonly Dictionary<IntPtr, LG_PickupItem_Sync> SlotItems = new(4);
 
         [HideFromIl2Cpp]
         public void Setup(LG_WeakResourceContainer_Graphics graphic, LG_ResourceContainer_Storage storage, int slotIndex)
@@ -52,17 +53,12 @@ namespace DropItem.Comps
             Storage.Set(storage);
             Slot.Set(slot);
             SlotIndex.Set(slotIndex);
-            _ItemsLookup.Add(GetInstanceID(), new());
+            _CreatedSlots.Add(Pointer, this);
         }
 
         public void OnDestroy()
         {
-            var id = GetInstanceID();
-            if (_ItemsLookup.TryGetValue(id, out var list))
-            {
-                list.Clear();
-                _ItemsLookup.Remove(id);
-            }
+            _CreatedSlots.Remove(Pointer);
         }
 
         [HideFromIl2Cpp]
@@ -74,42 +70,25 @@ namespace DropItem.Comps
         [HideFromIl2Cpp]
         public bool GetIsSlotInUse()
         {
-            var slotID = GetInstanceID();
-            if (_ItemsLookup.TryGetValue(slotID, out var list))
-            {
-                return list.Count > 0;
-            }
-            return true;
+            return SlotItems.Count > 0;
         }
 
         [HideFromIl2Cpp]
-        public void AddItem(int id)
+        public void AddItem(LG_PickupItem_Sync sync)
         {
-            var slotID = GetInstanceID();
-            if (_ItemsLookup.TryGetValue(slotID, out var list))
-            {
-                list.Add(id);
-            }
+            SlotItems.Add(sync.gameObject.Pointer, sync);
         }
 
         [HideFromIl2Cpp]
-        public void RemoveItem(int id)
+        public void RemoveItem(LG_PickupItem_Sync sync)
         {
-            var slotID = GetInstanceID();
-            if (_ItemsLookup.TryGetValue(slotID, out var list))
-            {
-                list.Remove(id);
-            }
+            SlotItems.Remove(sync.gameObject.Pointer);
         }
 
         [HideFromIl2Cpp]
         public void RemoveAllItem()
         {
-            var slotID = GetInstanceID();
-            if (_ItemsLookup.TryGetValue(slotID, out var list))
-            {
-                list.Clear();
-            }
+            SlotItems.Clear();
         }
 
         [HideFromIl2Cpp]
@@ -172,6 +151,29 @@ namespace DropItem.Comps
 
             slot = null;
             return false;
+        }
+
+        [HideFromIl2Cpp]
+        public static void OnLevelCleanup()
+        {
+            foreach (ResourceContainerSlot slot in _CreatedSlots.Values)
+            {
+                if (slot != null)
+                {
+                    foreach (var syncItem in slot.SlotItems.Values)
+                    {
+                        if (syncItem != null)
+                        {
+                            Destroy(syncItem.gameObject);
+                        }
+                    }
+                    
+                    Destroy(slot.gameObject);
+                }
+            }
+
+            // JFS - Each slot should be removed by their OnDestroy
+            _CreatedSlots.Clear();
         }
     }
 }
