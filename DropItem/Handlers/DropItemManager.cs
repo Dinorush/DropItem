@@ -110,8 +110,7 @@ namespace DropItem.Handlers
                     custom: customData,
                     position: baseTransform.position,
                     rotation: baseTransform.rotation,
-                    node: Slot.Storage.Value.m_core.SpawnNode,
-                    droppedOnFloor: true);
+                    node: Slot.Storage.Value.m_core.SpawnNode);
             }
         }
 
