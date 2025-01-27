@@ -12,7 +12,7 @@ namespace DropItem.Handlers
         [HideFromIl2Cpp]
         public Ray AgentRay => new()
         {
-            origin = Agent.EyePosition,
+            origin = Agent.FPSCamera.Position,
             direction = Agent.FPSCamera.Forward
         };
 
