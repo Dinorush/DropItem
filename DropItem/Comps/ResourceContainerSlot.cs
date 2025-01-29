@@ -76,7 +76,7 @@ namespace DropItem.Comps
         [HideFromIl2Cpp]
         public void AddItem(LG_PickupItem_Sync sync)
         {
-            SlotItems.Add(sync.gameObject.Pointer, sync);
+            SlotItems.TryAdd(sync.gameObject.Pointer, sync);
         }
 
         [HideFromIl2Cpp]
