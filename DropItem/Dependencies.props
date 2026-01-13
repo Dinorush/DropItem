@@ -1,50 +1,36 @@
-﻿<Project InitialTargets="ValidateGamePath">
-	<Import Project="$(MSBuildThisFileDirectory)\GameFolder.props" Condition="Exists('$(MSBuildThisFileDirectory)\GameFolder.props')" />
+<Project InitialTargets="ValidateGamePath">
+    <Import Project="$(MSBuildThisFileDirectory)\GameFolder.props" Condition="Exists('$(MSBuildThisFileDirectory)\GameFolder.props')" />
   
-	<Target Name="ValidateGamePath">
-		<Error Text="The GameFolder property must be set to the GTFO game folder." Condition="'$(GameFolder)' == '' or !Exists('$(GameFolder)')" />
-	</Target>
+    <Target Name="ValidateGamePath">
+        <Error Text="The GameFolder property must be set to the Game folder." Condition="'$(GameFolder)' == '' or !Exists('$(GameFolder)')" />
+    </Target>
 
-	<!-- Path Info -->
-	<PropertyGroup>
-		<BIELibsFolder>$(GameFolder)\BepInEx\core</BIELibsFolder>
-		<CorLibsFolder>$(GameFolder)\dotnet</CorLibsFolder>
-		<InteropLibsFolder>$(GameFolder)\BepInEx\interop</InteropLibsFolder>
-		<PluginsFolder>$(GameFolder)\BepInEx\plugins</PluginsFolder>
+    <!-- Path Properties -->
+    <PropertyGroup>
+        <BIELibsFolder>$(GameFolder)\BepInEx\core</BIELibsFolder>
+        <PluginsFolder>$(GameFolder)\BepInEx\plugins</PluginsFolder>
+        <GameAssembliesFolder>$(GameFolder)\BepInEx\interop</GameAssembliesFolder>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	</PropertyGroup>
-
-	<!-- BepInEx libs -->
-	<ItemGroup>
-		<Reference Include="$(BIELibsFolder)\BepInEx.*.dll" Private="false" />
-		<Reference Include="$(BIELibsFolder)\0Harmony.dll" Private="false" />
+  
+    <!-- Assemblies -->
+    <ItemGroup>
+        <!-- BepInEx -->
+        <Reference Include="$(BIELibsFolder)\BepInEx.*.dll" Private="false" />
+        <Reference Include="$(BIELibsFolder)\0Harmony.dll" Private="false" />
+        <Reference Include="$(BIELibsFolder)\Il2CppInterop.Runtime.dll" Private="false" />
 		<Reference Include="$(BIELibsFolder)\MonoMod.RuntimeDetour.dll" Private="false" />
-		<Reference Include="$(BIELibsFolder)\Il2CppInterop.*.dll" Private="false" />
-	</ItemGroup>
 
-	<!-- CorLibs -->
-	<ItemGroup>
-		<Reference Include="$(CorLibsFolder)\*.dll" Private="false" />
-		<!-- Filter Native DLL -->
-		<Reference Remove="$(CorLibsFolder)\coreclr.dll" />
-		<Reference Remove="$(CorLibsFolder)\mscorrc.dll" />
-		<Reference Remove="$(CorLibsFolder)\dbgshim.dll" />
-		<Reference Remove="$(CorLibsFolder)\msquic.dll" />
-		<Reference Remove="$(CorLibsFolder)\hostpolicy.dll" />
-		<Reference Remove="$(CorLibsFolder)\*Native*.dll" />
-		<Reference Remove="$(CorLibsFolder)\clr*.dll" />
-		<Reference Remove="$(CorLibsFolder)\mscord*.dll" />
-	</ItemGroup>
+        <!-- Game Assemblies -->
+        <Reference Include="$(GameAssembliesFolder)/*.dll" Private="false" />
+        <Reference Remove="$(GameAssembliesFolder)/netstandard.dll" />
+        <Reference Remove="$(GameAssembliesFolder)/mscorlib.dll" />
+        <Reference Remove="$(GameAssembliesFolder)/Newtonsoft.Json.dll" />
+    </ItemGroup>
 
-	<!-- Interop -->
+	<!-- Plugins -->
 	<ItemGroup>
-		<Reference Include="$(InteropLibsFolder)\*.dll" Private="false" />
-		<Reference Remove="$(InteropLibsFolder)\netstandard.dll" />
-		<Reference Remove="$(InteropLibsFolder)\Newtonsoft.Json.dll" />
-	</ItemGroup>
-
-	<!-- Plugin Dependencies -->
-	<ItemGroup>
-		<Reference Include="$(PluginsFolder)\GTFO-API.dll" Private="false" />
+		<Reference Include="$(PluginsFolder)/GTFO-API.dll" Private="false" />
 	</ItemGroup>
 
 	<!-- NuGet Packages -->
