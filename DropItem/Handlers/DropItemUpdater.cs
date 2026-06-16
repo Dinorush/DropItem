@@ -34,6 +34,10 @@ namespace DropItem.Handlers
 
         void UpdateSlotInRay()
         {
+            var interact = Agent.Interaction.m_bestSelectedInteract?.TryCast<Interact_Timed>();
+            if (interact != null && interact.TimerIsActive)
+                goto FAILED;
+
             if (Physics.Raycast(AgentRay, out var hit, 1.35f, DropItemManager.InteractionMask))
             {
                 if (hit.collider == null)
