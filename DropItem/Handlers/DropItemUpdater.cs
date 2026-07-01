@@ -1,4 +1,5 @@
 ﻿using DropItem.Comps;
+using Gear;
 using Il2CppInterop.Runtime.Attributes;
 using Player;
 using UnityEngine;
@@ -36,6 +37,9 @@ namespace DropItem.Handlers
         {
             var interact = Agent.Interaction.m_bestSelectedInteract?.TryCast<Interact_Timed>();
             if (interact != null && interact.TimerIsActive)
+                goto FAILED;
+
+            if (IsPackOverriding())
                 goto FAILED;
 
             if (Physics.Raycast(AgentRay, out var hit, 1.35f, DropItemManager.InteractionMask))
@@ -79,6 +83,15 @@ namespace DropItem.Handlers
             }
 
             DropItemManager.SetWieldingItem(null, InventorySlot.None);
+        }
+
+        bool IsPackOverriding()
+        {
+            var inventory = Agent.Inventory;
+            if (inventory == null || inventory.WieldedSlot != InventorySlot.ResourcePack) return false;
+
+            var interact = inventory.WieldedItem.Cast<ResourcePackFirstPerson>().m_interactApplyResource;
+            return interact.TimerIsActive;
         }
     }
 }
